@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = "dist" # <--- IMPORTANT: For Vite, the publish directory is typically 'dist', not 'build'
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+  # You can also add `[plugins.inputs]` to configure if needed, but disabling might be enough.
+  # To ensure it's not used, we effectively just don't declare it or manually remove it.

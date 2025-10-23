@@ -1,4 +1,7 @@
 import React from 'react';
+import ban1 from '@/assets/images/ban1.jpg';
+import bg2 from '@/assets/images/bg2.png';
+import bg3 from '@/assets/images/bg3.png';
 import { motion } from 'framer-motion';
 // import Timeline from '../components/Timeline';
 
@@ -49,7 +52,7 @@ const About: React.FC = () => {
         <div
           className="absolute inset-0 w-full h-full z-0"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80')",
+      backgroundImage: `url(${ban1})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0.18,
@@ -119,7 +122,7 @@ const About: React.FC = () => {
             <div className="flex-1 flex items-center justify-center z-10 p-4 md:p-8">
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <img
-                  src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80"
+                  src={bg2}
                   alt="Vision"
                   className="rounded-2xl w-full h-full object-cover shadow-lg border-4 border-[#FE49AF]/20"
                 />
@@ -145,7 +148,7 @@ const About: React.FC = () => {
             <div className="flex-1 flex items-center justify-center z-10 p-4 md:p-8">
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <img
-                  src="https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&q=80"
+                  src={bg3}
                   alt="Handmade products"
                   className="rounded-2xl w-full h-full object-cover shadow-lg border-4 border-[#67246a]/20"
                 />
@@ -172,7 +175,7 @@ const About: React.FC = () => {
             <div className="relative flex-shrink-0 flex justify-center items-center w-full md:w-1/3 z-10 py-4 md:py-0">
               <div className="w-40 h-40 sm:w-52 sm:h-52">
                 <img
-                  src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80"
+                  src={ban1}
                   alt="Founder"
                   className="rounded-2xl w-full h-full object-cover border-4 border-[#FE49AF]/30 shadow-xl"
                 />

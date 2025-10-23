@@ -26,22 +26,18 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // Use FormSubmit.io (no backend required)
-      const response = await fetch('https://formsubmit.co/ajax/diyweboffi@gmail.com', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzRZQ7021tg2kgIE98UeEfiZdfgbGhSENt1_CVkP4IajBs1kTX_-BB4ml4fXAXbHyMn/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email, // from address
-          subject: formData.subject,
-          message: formData.message,
-          _replyto: formData.email, // reply-to
+          ...formData,
+          secret: 'nurmaaSecret2025',
         }),
       });
-      if (response.ok) {
+      const result = await response.json();
+      if (result.result === 'success') {
         toast({
           title: "Message Received",
           description: "Thank you for contacting us. Our team will respond within 24 hours.",
@@ -139,49 +135,44 @@ const Contact: React.FC = () => {
               <h2 className="text-2xl font-bold text-[#121769] mb-6">Send us a message</h2>
               <form
                 onSubmit={async (e) => {
-                e.preventDefault();
-                setIsSubmitting(true);
-                try {
-                  // Use FormSubmit.io (no backend required)
-                  const response = await fetch('https://formsubmit.co/ajax/diyweboffi@gmail.com', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      name: formData.name,
-                      email: formData.email, // from address
-                      subject: formData.subject,
-                      message: formData.message,
-                      _replyto: formData.email, // reply-to
-                    }),
-                  });
-                  if (response.ok) {
+                  e.preventDefault();
+                  setIsSubmitting(true);
+                  try {
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbzim0-G9WzJwtcZki3hYrHHPzmApTkeSaCVGQh1Mzoup4Sv2GPfOp1yDGN12jGRSnB9/exec', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        ...formData,
+                        secret: 'nurmaaSecret2025',
+                      }),
+                    });
+                    const result = await response.json();
+                    if (result.result === 'success') {
+                      toast({
+                        title: "Message Received",
+                        description: "Thank you for contacting us. Our team will respond within 24 hours.",
+                        duration: 5000,
+                      });
+                      setFormData({
+                        name: '',
+                        email: '',
+                        subject: '',
+                        message: ''
+                      });
+                    } else {
+                      throw new Error('Failed to send');
+                    }
+                  } catch (error) {
                     toast({
-                    title: "Message Received",
-                    description: "Thank you for contacting us. Our team will respond within 24 hours.",
-                    duration: 5000,
+                      title: "Delivery Failed",
+                      description: "Your message couldn't be sent. Please try again or contact us directly.",
+                      variant: "destructive",
                     });
-
-                    setFormData({
-                    name: '',
-                    email: '',
-                    subject: '',
-                    message: ''
-                    });
-                  } else {
-                    throw new Error('Failed to send');
+                  } finally {
+                    setIsSubmitting(false);
                   }
-                } catch (error) {
-                  toast({
-                  title: "Delivery Failed",
-                  description: "Your message couldn't be sent. Please try again or contact us directly.",
-                  variant: "destructive",
-                  });
-                } finally {
-                  setIsSubmitting(false);
-                }
                 }}
                 className="space-y-6"
               >

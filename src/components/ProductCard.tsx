@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import { Product } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { ArrowRight, ShoppingCart, Leaf, Utensils } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import LazyImage from '@/components/LazyImage';
 
 const ProductCard: React.FC<{ product: Product; onQuickPurchase?: (product: Product) => void }> = ({ 
   product, 
   onQuickPurchase 
 }) => {
   const { addItem } = useCart();
-  const [isHovered, setIsHovered] = React.useState(false);
   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -27,18 +27,11 @@ const ProductCard: React.FC<{ product: Product; onQuickPurchase?: (product: Prod
   return (
     <Link 
       to={`/product/${product.id}`} 
-      className="block h-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="block h-full group"
     >
       <motion.div 
-        className="h-full flex flex-col bg-[#EBEBD3] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border-2 border-[#121769]/10 hover:border-[#121769]/30"
-        whileHover={{ y: -8 }}
-        style={{
-          background: isHovered 
-            ? 'linear-gradient(145deg, #EBEBD3, #ffffff)' 
-            : '#EBEBD3'
-        }}
+        className="h-full flex flex-col bg-[#EBEBD3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 border-2 border-[#121769]/10 group-hover:-translate-y-1 group-hover:shadow-lg"
+        style={{ background: '#EBEBD3' }}
       >
         {/* Layered image composition */}
         <div className="relative aspect-square bg-white overflow-hidden">
@@ -70,123 +63,21 @@ const ProductCard: React.FC<{ product: Product; onQuickPurchase?: (product: Prod
 
           {/* Main product image container */}
           <div className="relative z-10 w-full h-full flex items-center justify-center">
-            {/* Background image (emerges from behind the main image) */}
-            <AnimatePresence>
-              {isHovered && product.bgImage && (
-                <motion.div
-                  className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
-                  initial={{ opacity: 0, scale: 0.9, x: 0, y: 0 }}
-                  animate={{ 
-                    opacity: 1,
-                    scale: 1.15,
-                    x: 80,
-                    y: -40,
-                    transition: { 
-                      duration: 0.6, 
-                      ease: [0.22, 1, 0.36, 1],
-                      scale: { duration: 0.8 }
-                    }
-                  }}
-                  exit={{ 
-                    opacity: 0, 
-                    scale: 0.9,
-                    x: 0, 
-                    y: 0,
-                    transition: { duration: 0.3 }
-                  }}
-                >
-                  <img
-                    src={product.bgImage}
-                    alt="background"
-                    className="object-contain"
-                    style={{ 
-                      width: '40%', 
-                      height: '40%',
-                      filter: 'drop-shadow(0 4px 8px rgba(18, 23, 105, 0.2))'
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Background image removed to disable hover animations */}
 
             {/* Main product image */}
-            <motion.div 
-              className="relative z-10 w-full h-full flex items-center justify-center"
-              animate={{
-                y: isHovered ? -10 : [0, -15, 0],
-                scale: isHovered ? 1.05 : 1
-              }}
-              transition={{
-                y: { duration: 0.3 },
-                scale: { duration: 0.3 },
-                default: isHovered ? {} : {
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-            >
-              <img 
-                src={product.image} 
-                alt={product.name}
-                className="w-3/4 h-3/4 object-contain"
-                style={{
-                  filter: 'drop-shadow(0 8px 16px rgba(18, 23, 105, 0.3))',
-                  transition: 'all 0.3s ease'
-                }}
-              />
-            </motion.div>
+            <div className="relative z-10 w-full h-full">
+              <div style={{ width: '100%', height: '100%' }} className="overflow-hidden">
+                <LazyImage src={product.image} alt={product.name} fit="cover" className="transition-transform duration-300 ease-out group-hover:scale-105" />
+              </div>
+            </div>
 
             {/* Foreground image (emerges from behind the main image) */}
-            <AnimatePresence>
-              {isHovered && product.fgImage && (
-                <motion.div
-                  className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
-                  initial={{ opacity: 0, scale: 0.9, x: 0, y: 0 }}
-                  animate={{ 
-                    opacity: 1,
-                    scale: 1.15,
-                    x: -80,
-                    y: 40,
-                    transition: { 
-                      duration: 0.6, 
-                      ease: [0.22, 1, 0.36, 1],
-                      scale: { duration: 0.8 }
-                    }
-                  }}
-                  exit={{ 
-                    opacity: 0, 
-                    scale: 0.9,
-                    x: 0, 
-                    y: 0,
-                    transition: { duration: 0.3 }
-                  }}
-                >
-                  <img
-                    src={product.fgImage}
-                    alt="foreground"
-                    className="object-contain"
-                    style={{ 
-                      width: '40%', 
-                      height: '40%',
-                      filter: 'drop-shadow(0 4px 8px rgba(103, 36, 106, 0.2))'
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+          {/* Foreground image removed to disable hover animations */}
           </div>
 
           {/* Gradient overlay */}
-          <motion.div 
-            className="absolute inset-0 z-5"
-            style={{
-              background: isHovered
-                ? 'linear-gradient(135deg, rgba(254, 73, 175, 0.05) 0%, rgba(103, 36, 106, 0.05) 100%)'
-                : 'none'
-            }}
-            transition={{ duration: 0.5 }}
-          />
+          <div className="absolute inset-0 z-5" />
         </div>
         
         {/* Product info */}
@@ -203,7 +94,7 @@ const ProductCard: React.FC<{ product: Product; onQuickPurchase?: (product: Prod
           {/* Price and actions */}
           <div className="mt-auto space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xl font-bold text-[#121769]">
+              <span className="text-xl font-bold text-[#FE49AF]">
                 ₹{Number(product.price).toLocaleString('en-IN')}
               </span>
               <motion.button

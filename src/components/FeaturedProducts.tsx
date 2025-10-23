@@ -1,57 +1,50 @@
 // FeaturedProducts.tsx
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, lazy, Suspense, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ProductCard from './ProductCard';
+const ProductCard = lazy(() => import('@/components/ProductCard'));
 import { Product } from '@/lib/types';
 import { motion, useInView } from 'framer-motion';
 import { FaFire } from 'react-icons/fa';
-import product3 from '@/assets/images/product3.png';
-import product2 from '@/assets/images/product2.png';
-import bottle1 from '@/assets/images/—Pngtree—blue perfume glass bottle elegant_20856067.png';
 import bg1 from '@/assets/images/fg3.png';
 import bg2 from '@/assets/images/bg2.png';
 import bg3 from '@/assets/images/bg3.png';
+// product images as imports for bundler optimization
+import granolaImg from '@/assets/images/Nurmaa product image/granola.webp';
+import sproutedRagiImg from '@/assets/images/Nurmaa product image/Sprouted Ragi/Sprouted Ragi 500gm.webp';
+import kambuImg from '@/assets/images/Nurmaa product image/Kambu Puttu Mix.webp';
+import ceramideImg from '@/assets/images/Nurmaa product image/Ceramide Moisturizer.webp';
  // Import your light background image
 
 const featuredProducts: Product[] = [
   {
-    id: '1',
-    name: 'Lavender Face Cream',
+    id: '15',
+    name: 'Ceramide Moisturizer',
     category: 'skincare',
-    description: 'A soothing face cream made with organic lavender essential oil and shea butter.',
-    price: 24.99,
-    image: product3,
-    rating: 4.8,
-    featured: true,
-    tags: ['bestseller', 'organic'],
-    bgImage: bg1,
-    fgImage: bg1
+    description: 'Our Ceramide Moisturizer restores skin barrier and locks in moisture with ceramides and shea butter for smoother, hydrated skin.',
+    price: 320,
+    image: ceramideImg,
+    rating: 4.6,
+    featured: true
   },
   {
     id: '2',
-    name: 'Organic Honey',
+    name: 'Sprouted Ragi Powder',
     category: 'food',
-    description: 'Pure, unfiltered honey sourced from local wildflowers and herbs.',
-    price: 12.99,
-    image: product2,
+    description: "Sprouted Ragi Powder – Naturally Nutritious & Wholesome Carefully prepared from 100% whole ragi grains, our Sprouted Ragi Powder is a powerhouse of nutrition. The grains are traditionally sprouted to enhance bioavailability, gently dried, and finely milled to preserve their natural goodness. Rich in calcium, iron, and dietary fiber, sprouted ragi supports strong bones, aids digestion, and helps maintain healthy blood sugar levels. This gluten-free superfood is perfect for porridge, dosa, health drinks, or baking. Ideal for growing children, fitness enthusiasts, and anyone seeking a healthy alternative to refined flours.",
+    price: 80,
+    image: sproutedRagiImg,
     rating: 5.0,
-    featured: true,
-    tags: ['new', 'limited'],
-    bgImage: bg2,
-    fgImage: bg2
+    featured: true
   },
   {
     id: '3',
-    name: 'Rosemary Hair Oil',
-    category: 'skincare',
-    description: 'Nourishing hair oil with rosemary and coconut oil for healthy, shiny hair.',
-    price: 18.99,
-    image: bottle1,
+    name: 'Kambu Puttu Mix',
+    category: 'food',
+    description: "Rekindle the flavors of your grandmother’s kitchen with our Kambu Puttu Mix, made from premium pearl millet (kambu) blended with a touch of cardamom and natural salt. This wholesome puttu mix is stone-ground and prepared in small batches to retain its natural aroma, fiber, and nutritional richness. Just steam the mix and enjoy it hot with jaggery, grated coconut, or a drizzle of ghee for a delicious and satisfying meal. It’s a perfect, quick-fix breakfast or evening tiffin that’s both filling and gut-friendly.",
+    price: 110,
+    image: kambuImg,
     rating: 4.6,
-    featured: true,
-    tags: ['vegan', 'bestseller'],
-    bgImage: bg3,
-    fgImage: bg3
+    featured: true
   }
 ];
 
@@ -60,10 +53,70 @@ const FeaturedProducts: React.FC<{ onQuickPurchase?: (product: Product) => void 
   const isInView = useInView(ref, { once: false, amount: 0.1 });
   const [mobileIndex, setMobileIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const autoPlayRef = useRef<number | null>(null);
+  const resumeTimeoutRef = useRef<number | null>(null);
+  const isMountedRef = useRef(true);
+
+  // autoplay only on mobile (max-width: 640px)
+  useEffect(() => {
+    isMountedRef.current = true;
+    const mq = typeof window !== 'undefined' ? window.matchMedia('(max-width: 640px)') : null;
+
+    function startAutoPlay() {
+      if (autoPlayRef.current) return;
+      autoPlayRef.current = window.setInterval(() => {
+        setMobileIndex((prev) => (prev + 1) % featuredProducts.length);
+      }, 4000);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+        autoPlayRef.current = null;
+      }
+    }
+
+    function handleVisibility() {
+      if (document.hidden) stopAutoPlay();
+      else if (!isPaused && mq && mq.matches) startAutoPlay();
+    }
+
+    if (mq && mq.matches && !isPaused) startAutoPlay();
+
+    const mqListener = (e: MediaQueryListEvent) => {
+      if (e.matches && !isPaused) startAutoPlay();
+      else stopAutoPlay();
+    };
+
+    if (mq && 'addEventListener' in mq) mq.addEventListener('change', mqListener);
+    else if (mq && 'addListener' in mq) (mq as any).addListener(mqListener);
+
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      isMountedRef.current = false;
+      stopAutoPlay();
+      if (mq && 'removeEventListener' in mq) mq.removeEventListener('change', mqListener);
+      else if (mq && 'removeListener' in mq) (mq as any).removeListener(mqListener);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, [isPaused]);
 
   // Mobile swipe handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStartX(e.touches[0].clientX);
+    // pause autoplay while interacting
+    setIsPaused(true);
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
+      resumeTimeoutRef.current = null;
+    }
   };
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX !== null) {
@@ -74,6 +127,11 @@ const FeaturedProducts: React.FC<{ onQuickPurchase?: (product: Product) => void 
       }
     }
     setTouchStartX(null);
+    // resume autoplay after short idle
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = window.setTimeout(() => {
+      setIsPaused(false);
+    }, 3000);
   };
 
   return (
@@ -83,12 +141,12 @@ const FeaturedProducts: React.FC<{ onQuickPurchase?: (product: Product) => void 
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       style={{
-        backgroundImage: 'url(https://i.pinimg.com/736x/89/4b/e4/894be4cc36d0e777a2c5129d6c4dd17d.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat'
-      }}
+          backgroundImage: `url(${bg1})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'scroll', // changed from fixed to scroll for better performance
+          backgroundRepeat: 'no-repeat'
+        }}
     >
       {/* Semi-transparent overlay to ensure text readability */}
       <div 
@@ -106,13 +164,21 @@ const FeaturedProducts: React.FC<{ onQuickPurchase?: (product: Product) => void 
         </div>
         {/* Desktop grid */}
         <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {featuredProducts.map((product) => (
-            <ProductCard 
-              key={product.id}
-              product={product} 
-              onQuickPurchase={onQuickPurchase}
-            />
-          ))}
+          <Suspense fallback={
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-[#fff] rounded-xl p-4 animate-pulse h-64" />
+              ))}
+            </div>
+          }>
+            {featuredProducts.map((product) => (
+              <ProductCard 
+                key={product.id}
+                product={product} 
+                onQuickPurchase={onQuickPurchase}
+              />
+            ))}
+          </Suspense>
         </div>
         {/* Mobile slider */}
         <div className="sm:hidden w-full flex flex-col items-center">
@@ -123,10 +189,12 @@ const FeaturedProducts: React.FC<{ onQuickPurchase?: (product: Product) => void 
             onTouchEnd={handleTouchEnd}
           >
             <div className="w-full max-w-xs mx-auto">
-              <ProductCard 
-                product={featuredProducts[mobileIndex]} 
-                onQuickPurchase={onQuickPurchase}
-              />
+              <Suspense fallback={<div className="bg-white rounded-xl p-4 animate-pulse h-64" />}>
+                <ProductCard 
+                  product={featuredProducts[mobileIndex]} 
+                  onQuickPurchase={onQuickPurchase}
+                />
+              </Suspense>
             </div>
             {/* Slide dots */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 mt-2">

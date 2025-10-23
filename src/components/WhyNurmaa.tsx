@@ -1,7 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { GiPlantSeed, GiFarmTractor, GiLipstick, GiTreeGrowth } from 'react-icons/gi';
-
 const WhyChooseUs = () => {
   const features = [
     {
@@ -30,38 +28,7 @@ const WhyChooseUs = () => {
     }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const hoverVariants = {
-    hover: {
-      y: -10,
-      transition: {
-        type: "spring",
-        stiffness: 300
-      }
-    }
-  };
+  // Framer Motion removed: features will render statically for better performance and simplicity
 
   // Hieroglyphic grid background component
   const GridBackground = () => (
@@ -86,7 +53,7 @@ const WhyChooseUs = () => {
       
       {/* Floating hieroglyphs */}
       {[...Array(40)].map((_, i) => (
-        <motion.div
+        <div
           key={i}
           className="absolute text-xl opacity-10"
           style={{
@@ -94,20 +61,9 @@ const WhyChooseUs = () => {
             top: `${Math.random() * 100}%`,
             color: ['#D4AF37', '#3A4E7A', '#8B2323'][Math.floor(Math.random() * 3)]
           }}
-          animate={{
-            y: [0, Math.random() * 10 - 5],
-            x: [0, Math.random() * 10 - 5],
-            rotate: [0, Math.random() * 10 - 5]
-          }}
-          transition={{
-            duration: 10 + Math.random() * 20,
-            repeat: Infinity,
-            repeatType: 'reverse'
-          }}
         >
-          {['𓀀', '𓁟', '𓂀','𓃭','𓃙', '𓅓', '𓆣', '𓇋','𓃘','𓃗','𓃙','𓃙', '𓃠', '𓄿','𓃗','𓃗','𓃙','𓃘','𓃭','𓃘',
-][Math.floor(Math.random() * 20)]}
-        </motion.div>
+          {['𓀀', '𓁟', '𓂀','𓃭','𓃙', '𓅓', '𓆣', '𓇋','𓃘','𓃗','𓃙','𓃙', '𓃠', '𓄿','𓃗','𓃗','𓃙','𓃘','𓃭','𓃘',][Math.floor(Math.random() * 20)]}
+        </div>
       ))}
     </div>
   );
@@ -173,14 +129,8 @@ const WhyChooseUs = () => {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Animated title section */}
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+        {/* Title section (static) */}
+        <div className="text-center mb-16">
           <h2 
             className="text-4xl md:text-5xl font-bold mb-6 tracking-tight"
             style={{ 
@@ -201,18 +151,12 @@ const WhyChooseUs = () => {
           >
             Where the sacred beauty rituals of ancient Egypt meet cutting-edge cosmetic science
           </p>
-        </motion.div>
+        </div>
 
-        {/* Features grid */}
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        {/* Features grid (static) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <motion.div
+            <div
               key={index}
               className="relative overflow-hidden rounded-xl p-8 shadow-lg border border-opacity-20"
               style={{ 
@@ -221,16 +165,11 @@ const WhyChooseUs = () => {
                 borderColor: '#D4AF37',
                 boxShadow: '0 8px 32px rgba(12, 20, 70, 0.2)'
               }}
-              variants={itemVariants}
-              whileHover="hover"
             >
               {/* Cartouche shape effect */}
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-16 bg-[#D4AF37] rounded-full opacity-10"></div>
               
-              <motion.div
-                className="relative z-10"
-                variants={hoverVariants}
-              >
+              <div className="relative z-10">
                 <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6 mx-auto"
                   style={{ 
                     backgroundColor: "rgba(255,255,255,0.15)",
@@ -260,42 +199,27 @@ const WhyChooseUs = () => {
                 >
                   {feature.description}
                 </p>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* CTA section with Egyptian border */}
-        <motion.div 
-          className="mt-20 text-center relative"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8 }}
-        >
+        {/* CTA section with Egyptian border (static) */}
+        <div className="mt-20 text-center relative">
           {/* Decorative border */}
           <div className="absolute top-0 left-0 right-0 h-2 overflow-hidden">
             <div className="flex justify-center space-x-4">
               {[...Array(20)].map((_, i) => (
-                <motion.div
+                <div
                   key={i}
                   className="text-xl text-[#3A4E7A]"
-                  animate={{
-                    y: [0, -3, 0],
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{
-                    duration: 3 + Math.random() * 4,
-                    repeat: Infinity
-                  }}
                 >
-                  {/* Only use icons not in the removed list */}
-                </motion.div>
+                  {/* Decorative icon placeholder */}
+                </div>
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <style>{`

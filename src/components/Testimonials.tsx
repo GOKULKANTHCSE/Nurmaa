@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clientImg from '@/assets/images/client.png';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Testimonial {
@@ -15,7 +16,7 @@ const testimonials: Testimonial[] = [
     id: '1',
     name: 'Alex Johnson',
     role: 'Skincare Enthusiast',
-    image: 'https://randomuser.me/api/portraits/women/65.jpg',
+    image: clientImg,
     text: 'The vitamin C serum transformed my skin in just two weeks! My complexion is brighter and more even than ever before.',
     rating: 5
   },
@@ -23,7 +24,7 @@ const testimonials: Testimonial[] = [
     id: '2',
     name: 'Sam Wilson',
     role: 'Organic Lifestyle Blogger',
-    image: 'https://randomuser.me/api/portraits/men/42.jpg',
+    image: clientImg,
     text: 'Finally found a brand that aligns with my values. The ingredients are clean and the results speak for themselves.',
     rating: 5
   },
@@ -31,7 +32,7 @@ const testimonials: Testimonial[] = [
     id: '3',
     name: 'Taylor Chen',
     role: 'Beauty Editor',
-    image: 'https://randomuser.me/api/portraits/women/33.jpg',
+    image: clientImg,
     text: 'As someone who tests hundreds of products, I can confidently say these formulations are exceptional.',
     rating: 4
   },
@@ -39,7 +40,7 @@ const testimonials: Testimonial[] = [
     id: '4',
     name: 'Jordan Smith',
     role: 'Dermatologist',
-    image: 'https://randomuser.me/api/portraits/men/85.jpg',
+    image: clientImg,
     text: 'I recommend these products to my patients because they combine clinical efficacy with natural ingredients.',
     rating: 5
   }

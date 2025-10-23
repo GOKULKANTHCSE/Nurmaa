@@ -17,6 +17,19 @@ const Header: React.FC = () => {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    // If the user clicks a nav link that points to the current pathname,
+    // prevent the default navigation which can cause an unwanted scroll-to-top.
+    if (location.pathname === path) {
+      e.preventDefault();
+      // simply close the mobile menu if open
+      setIsMobileMenuOpen(false);
+      return;
+    }
+    // for different paths, close mobile menu and allow navigation to proceed
+    setIsMobileMenuOpen(false);
+  };
+
   const navLinks = [
     { label: 'Home', path: '/' },
       { label: 'About', path: '/about' },
@@ -47,6 +60,7 @@ const Header: React.FC = () => {
             <Link
               key={path}
               to={path}
+              onClick={(e) => handleNavClick(e as any, path)}
               className={`relative font-medium text-lg transition-colors duration-300 ${
                 location.pathname === path ? 'text-[#67246a] font-bold' : 'text-[#121769] hover:text-[#FE49AF]'
               } group`}
@@ -163,7 +177,7 @@ const Header: React.FC = () => {
                 <Link
                   key={path}
                   to={path}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e as any, path)}
                   className={`text-lg font-medium py-2 transition-colors ${
                     location.pathname === path 
                       ? 'text-[#67246a] font-bold border-l-4 border-[#FE49AF] pl-3' 

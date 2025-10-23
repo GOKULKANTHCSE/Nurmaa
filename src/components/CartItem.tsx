@@ -2,6 +2,7 @@
 import React from 'react';
 import { useCart } from '@/context/CartContext';
 import { CartItem as CartItemType } from '@/lib/types';
+import LazyImage from '@/components/LazyImage';
 
 interface CartItemProps {
   item: CartItemType;
@@ -20,11 +21,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
   return (
     <div className="flex items-center py-4 border-b">
       <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-        <img 
-          src={product.image} 
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
+        <LazyImage src={product.image} alt={product.name} width={64} height={64} fit="cover" />
       </div>
       
       <div className="ml-4 flex-grow">

@@ -3,6 +3,12 @@ import { Send, MessageSquare, X } from 'lucide-react';
 
 // Simulate a backend API call for chatbot
 async function fetchBotResponse(userInput) {
+  // Loving thank you reply
+  if (/\b(thank(s| you| u)?|thanks a lot|thankyou|thank u|ty)\b/i.test(userInput.trim())) {
+    return {
+      text: 'You are most welcome! 💖 If you need anything else, I am always here to help you with love and care. Have a wonderful day! 🌸'
+    };
+  }
   // Simulate network delay
   await new Promise((res) => setTimeout(res, 600));
   const lower = userInput.toLowerCase();
@@ -412,6 +418,38 @@ async function fetchBotResponse(userInput) {
     };
   }
 
+  // Handle common queries directly
+  const q = userInput.trim().toLowerCase();
+  if (q === 'product details' || q.includes('product details')) {
+    return {
+      text: 'We offer two main product types:\n1. Skincare Products\n2. Food Products\nAsk about any category for more details!'
+    };
+  }
+  if (q === 'ingredients' || q.includes('ingredients')) {
+    return {
+      text: 'Our products use natural, high-quality ingredients.\n- Skincare: Herbal extracts, cold-pressed oils, natural butters.\n- Food: Whole grains, seeds, nuts, natural sweeteners.\nAsk about a specific product for its ingredient list.'
+    };
+  }
+  if (q === 'benefits' || q.includes('benefits')) {
+    return {
+      text: 'Benefits depend on the product.\n- Skincare: Nourishes, hydrates, and protects your skin.\n- Food: Provides essential nutrients, fiber, and energy.\nAsk about a specific product for detailed benefits.'
+    };
+  }
+  if (q === 'recipes' || q.includes('recipes')) {
+    return {
+      text: 'We have easy recipes for our food products!\n- Granola: Enjoy with milk/yogurt or as a snack.\n- Ragi: Make porridge, dosa, or ladoo.\nAsk about a product for a specific recipe.'
+    };
+  }
+  if (q === 'usage instructions' || q.includes('usage instructions') || q === 'usage' || q.includes('how to use')) {
+    return {
+      text: 'Usage instructions vary by product.\n- Skincare: Apply as directed, usually after cleansing.\n- Food: Follow package or ask for a recipe.\nAsk about a specific product for step-by-step usage.'
+    };
+  }
+  if (q === 'orders & shipping' || q.includes('orders & shipping') || q.includes('order') || q.includes('shipping')) {
+    return {
+      text: 'Ordering is easy!\n- Place your order online.\n- Shipping is free across India.\n- Delivery in 3-5 business days.\nAsk about payment, returns, or tracking for more info.'
+    };
+  }
   // Default fallback
   return {
     text: "I'm here to help! Please ask about:\n- Product details\n- Ingredients\n- Benefits\n- Recipes\n- Usage instructions\n- Orders & shipping"
@@ -438,9 +476,24 @@ export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    
+    // Check if mobile view
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768); // 768px is common breakpoint for mobile
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
   }, [messages, open]);
 
   async function handleSend(e) {
@@ -453,6 +506,11 @@ export default function Chatbot() {
     const botResponse = await fetchBotResponse(input);
     setMessages((prev) => [...prev, { from: 'bot', text: botResponse.text }]);
     setLoading(false);
+  }
+
+  // Don't render anything if it's mobile view
+  if (isMobile) {
+    return null;
   }
 
   return (

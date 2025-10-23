@@ -2,20 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
 import { toast } from '@/hooks/use-toast';
-
-import WAConnect from '@wppconnect/wa-js';
 import Chatbot from '@/components/Chatbot';
+import LazyImage from '@/components/LazyImage';
 
-
-
-// EmailJS configuration
-const EMAILJS_SERVICE_ID = 'service_7k8d5pd';
-const EMAILJS_TEMPLATE_ID = 'template_cpoou7s';
-const EMAILJS_PUBLIC_KEY = 'FEPtogQBClrAWw3I1';
-
-
-// WhatsApp business number
-const WHATSAPP_NUMBER = '918667212177'; // Replace with your business number
+const WHATSAPP_NUMBER = '918667212177';
 
 const Checkout: React.FC = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -28,7 +18,6 @@ const Checkout: React.FC = () => {
     address: '',
     message: ''
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -39,71 +28,34 @@ const Checkout: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
-      // Basic validation
       if (!formData.name || !formData.email || !formData.phone || !formData.address) {
         throw new Error('Please fill in all required fields');
       }
-
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         throw new Error('Please enter a valid email address');
       }
-
       const phoneRegex = /^[6-9]\d{9}$/;
       if (!phoneRegex.test(formData.phone)) {
         throw new Error('Please enter a valid 10-digit phone number');
       }
-
-      // Format order details for both email and WhatsApp
-      const orderItems = items.map(item => 
-        `${item.product.name} (₹${item.product.price.toFixed(2)} x ${item.quantity})`
-      ).join('\n');
-
-      const orderSummary = `
-*New Order from ${formData.name}*
-------------------
-*Order ID:* NM-${Date.now()}
-*Customer Details:*
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Address: ${formData.address}
-
-*Order Items:*
-${orderItems}
-
-*Total Amount:* ₹${totalPrice.toFixed(2)}
-
-*Additional Notes:*
-${formData.message || 'No additional notes'}
-      `;
-
-      // Send email via FormSubmit (like Contact page)
-      const emailResponse = await fetch('https://formsubmit.co/ajax/diyweboffi@gmail.com', {
+      const orderItems = items.map(item => `${item.product.name} (₹${item.product.price.toFixed(2)} x ${item.quantity})`).join('\n');
+      const orderSummary = `*New Order from ${formData.name}*\n------------------\n*Order ID:* NM-${Date.now()}\n*Customer Details:*\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nAddress: ${formData.address}\n\n*Order Items:*\n${orderItems}\n\n*Total Amount:* ₹${totalPrice.toFixed(2)}\n\n*Additional Notes:*\n${formData.message || 'No additional notes'}`;
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderSummary)}`;
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzRZQ7021tg2kgIE98UeEfiZdfgbGhSENt1_CVkP4IajBs1kTX_-BB4ml4fXAXbHyMn/exec', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          message: formData.message || 'No additional notes',
+          ...formData,
           order_items: orderItems,
           order_total: `₹${totalPrice.toFixed(2)}`,
           order_id: `NM-${Date.now()}`,
-          subject: `Nurmaa Order: NM-${Date.now()}`,
-        }),
+          secret: 'nurmaaSecret2025',
+        })
       });
-
-      // WhatsApp message (keep as is)
-      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderSummary)}`;
-      
-      if (emailResponse.ok) {
+      const result = await response.json();
+      if (result.result === 'success') {
         clearCart();
         toast({
           title: "Order Placed Successfully!",
@@ -115,12 +67,9 @@ ${formData.message || 'No additional notes'}
         throw new Error('Failed to send order confirmation');
       }
     } catch (error) {
-      console.error("Error placing order:", error);
       toast({
         title: "Error",
-        description: error instanceof Error 
-          ? error.message 
-          : "Failed to place order. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to place order. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -215,7 +164,9 @@ ${formData.message || 'No additional notes'}
               <div className="space-y-4">
                 {items.map(item => (
                   <div key={item.product.id} className="flex items-center gap-4 bg-[#FE49AF]/5 p-3 rounded-xl">
-                    <img src={item.product.image} alt={item.product.name} className="w-20 h-20 object-cover rounded-xl border-2 border-[#EBEBD3]" />
+                    <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-[#EBEBD3]">
+                      <LazyImage src={item.product.image} alt={item.product.name} width={80} height={80} fit="cover" />
+                    </div>
                     <div className="flex-1">
                       <h4 className="font-medium text-[#121769]">{item.product.name}</h4>
                       <div className="flex justify-between text-sm mt-1">

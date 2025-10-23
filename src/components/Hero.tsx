@@ -2,8 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronLeft, ChevronRight, Heart, ShoppingBag } from "lucide-react";
+import Preloader from "./Preloader";
 
 import logo from '@/assets/images/ban1.jpg';
+import bg2 from '@/assets/images/ban1.png';
+import bg3 from '@/assets/images/ban2.png';
 
 const slides = [
 	{
@@ -18,7 +21,7 @@ const slides = [
 		id: 2,
 		title: "Pure, Simple, Organic",
 		description: "We bring you nature's best—no chemicals, no compromises. Just purity in every drop.",
-		image: "https://i.pinimg.com/736x/cf/e9/6a/cfe96aca38b049ddbfde022d92fbeec8.jpg",
+		image: bg2,
 		color: "#121769",
 		buttonVariant: "secondary"
 	},
@@ -26,7 +29,7 @@ const slides = [
 		id: 3,
 		title: "Crafted with Purpose",
 		description: "Every product tells a story—of farmers, artisans, and traditions passed through generations.",
-		image: "https://i.pinimg.com/736x/23/1a/2d/231a2d0b342a080fd6f6ebcf55bdcf6a.jpg",
+		image: bg3,
 		color: "#FE49AF",
 		buttonVariant: "destructive"
 	},
@@ -36,6 +39,7 @@ const Hero = () => {
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [direction, setDirection] = useState(1);
 	const [isHovering, setIsHovering] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const slideInterval = useRef(null);
 	const touchStartX = useRef(null);
 
@@ -45,6 +49,13 @@ const Hero = () => {
 		}
 		return () => stopSlideTimer();
 	}, [currentSlide, isHovering]);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setIsLoading(false);
+		}, 2000); // Simulate loading time
+		return () => clearTimeout(timer);
+	}, []);
 
 	const startSlideTimer = () => {
 		stopSlideTimer();

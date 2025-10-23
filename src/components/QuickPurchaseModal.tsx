@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import LazyImage from '@/components/LazyImage';
 
 interface QuickPurchaseModalProps {
   isOpen: boolean;
@@ -41,52 +42,12 @@ const QuickPurchaseModal: React.FC<QuickPurchaseModalProps> = ({ isOpen, onClose
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const formData = {
-        ...data,
-        productName: product?.name,
-        productPrice: product?.price,
-        productId: product?.id,
-      };
-      
-      if (!/^\S+@\S+\.\S+$/.test(data.email)) {
-        toast({ title: "Invalid email", description: "Please enter a valid email address", variant: "destructive" });
-        setIsSubmitting(false);
-        return;
-      }
-
-      // 1. Send email via FormSubmit
-      const emailResponse = await fetch('https://formsubmit.co/ajax/diyweboffi@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          address: data.address,
-          message: data.message,
-          product: product?.name,
-          price: product?.price,
-          _replyto: data.email,
-          subject: `Quick Purchase: ${product?.name}`,
-        }),
-      });
-
-      // 2. Send WhatsApp message (improved implementation)
-      const whatsappNumber = '918870261911'; // Remove any non-digit characters
+      // WhatsApp integration (unchanged)
+      const whatsappNumber = '918667212177';
       const productInfo = product ? `Product: ${product.name} (ID: ${product.id})\nPrice: ₹${product.price}\n` : '';
-      
       const whatsappMessage = `Quick Purchase Request\n${productInfo}Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nAddress: ${data.address}\nNotes: ${data.message}`;
-      
-      // Encode the message for URL
       const encodedMessage = encodeURIComponent(whatsappMessage);
-      
-      // Open WhatsApp with the message
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-      
-      // Create a temporary link to open in new tab
       const link = document.createElement('a');
       link.href = whatsappUrl;
       link.target = '_blank';
@@ -95,17 +56,15 @@ const QuickPurchaseModal: React.FC<QuickPurchaseModalProps> = ({ isOpen, onClose
       link.click();
       document.body.removeChild(link);
 
-      if (emailResponse.ok) {
-        setIsSubmitted(true);
-        toast({ title: "Purchase request sent!", description: "We'll contact you soon to confirm your order." });
-        setTimeout(() => {
-          setIsSubmitted(false);
-          form.reset();
-          onClose();
-        }, 3000);
-      } else {
-        throw new Error('Failed to send');
-      }
+      // TODO: Integrate Google Apps Script API call here
+      // On success, show toast and reset form
+      setIsSubmitted(true);
+      toast({ title: "Purchase request sent!", description: "We'll contact you soon to confirm your order." });
+      setTimeout(() => {
+        setIsSubmitted(false);
+        form.reset();
+        onClose();
+      }, 3000);
     } catch (error) {
       toast({ title: "Failed to send request", description: "Please try again later", variant: "destructive" });
     } finally {
@@ -140,11 +99,9 @@ const QuickPurchaseModal: React.FC<QuickPurchaseModalProps> = ({ isOpen, onClose
                 backgroundColor: '#12176910',
                 borderLeft: '3px solid #67246A'
               }}>
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
-                  className="w-12 h-12 object-cover rounded-md border border-[#12176920]"
-                />
+                <div className="w-12 h-12 rounded-md overflow-hidden border border-[#12176920]">
+                  <LazyImage src={product.image} alt={product.name} width={48} height={48} fit="cover" />
+                </div>
                 <div>
                   <h3 className="font-medium text-[#121769] line-clamp-1">{product.name}</h3>
                   <p className="text-[#67246A]">₹{product.price.toFixed(2)}</p>

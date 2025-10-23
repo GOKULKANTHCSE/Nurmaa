@@ -5,8 +5,8 @@ import { ArrowRight, ChevronLeft, ChevronRight, Heart, ShoppingBag } from "lucid
 import Preloader from "./Preloader";
 
 import logo from '@/assets/images/ban1.jpg';
-import bg2 from '@/assets/images/ban1.png';
-import bg3 from '@/assets/images/ban2.png';
+import bg2 from '@/assets/images/ban2.png';
+import bg3 from '@/assets/images/ban1.png';
 
 const slides = [
 	{

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../assets/images/logonurmaa.png';
+import logo from '../assets/images/logo.png';
 
 const MAX_WAIT_MS = 8000;
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Head from 'next/head';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
-import client from '@/assets/images/client.png';
+import client from '../../assets/images/client.png';
 
 const Testimonials: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -101,10 +101,10 @@ const Testimonials: React.FC = () => {
 
   return (
     <>
-      <Head>
+      <Helmet>
         <title>Testimonials | Our Happy Clients</title>
         <meta name="description" content="Hear what our clients and partners say about working with us" />
-      </Head>
+      </Helmet>
 
       <div className="min-h-screen bg-gradient-to-b from-[#EBEBD3] to-white">
         {/* Enhanced Hero Section */}

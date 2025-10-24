@@ -22,9 +22,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === 'development' &&
     componentTagger(),
-    ViteImageOptimizer({
-      /* pass your config */
-    }),
+    mode === 'production' ? ViteImageOptimizer() : undefined,
   ].filter(Boolean),
   resolve: {
     alias: {

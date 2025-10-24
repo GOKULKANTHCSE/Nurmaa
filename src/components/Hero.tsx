@@ -8,7 +8,6 @@ import logo from '@/assets/images/ban1.jpg';
 import bg2 from '@/assets/images/ban2.png';
 import bg3 from '@/assets/images/ban1.png';
 
-// Sitemap: https://www.nurmaa.com/sitemap.xml 
 
 const slides = [
 	{

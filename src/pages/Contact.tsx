@@ -1,9 +1,16 @@
 'use client';
 import React, { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
-import Head from 'next/head';
+// Not using next/head in this SPA
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronDown, FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
+
+// helper to render icons without passing className props (avoids IconBaseProps mismatch)
+const IconWrapper: React.FC<{ Comp: any; color?: string; size?: number; className?: string }> = ({ Comp, color, size = 20, className = '' }) => (
+  <span className={className} style={{ display: 'inline-flex', width: size, height: size, color }}>
+    <Comp />
+  </span>
+);
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -92,10 +99,19 @@ const Contact: React.FC = () => {
 
   return (
     <>
-      <Head>
-        <title>Contact | Nurmaa</title>
-        <meta name="description" content="Connect with our team for inquiries, support, and partnerships" />
-      </Head>
+      {/* SPA-friendly title/meta (no next/head) */}
+      {typeof document !== 'undefined' && (() => {
+        try {
+          document.title = 'Contact | Nurmaa';
+          let m = document.querySelector('meta[name="description"]');
+          if (!m) {
+            m = document.createElement('meta');
+            m.setAttribute('name', 'description');
+            document.head.appendChild(m);
+          }
+          m.setAttribute('content', 'Connect with our team for inquiries, support, and partnerships');
+        } catch (e) {}
+      })()}
 
       <motion.section
         initial={{ opacity: 0 }}
@@ -250,7 +266,7 @@ const Contact: React.FC = () => {
                   <div className="space-y-4">
                     <div className="flex items-start">
                       <div className="flex-shrink-0 bg-[#ebebd3] rounded-lg p-3">
-                        <FiMail className="h-6 w-6 text-[#121769]" />
+                        <IconWrapper Comp={FiMail} color="#121769" size={20} />
                       </div>
                       <div className="ml-4">
                         <h3 className="text-lg font-medium text-[#67246a]">Email</h3>
@@ -260,7 +276,7 @@ const Contact: React.FC = () => {
 
                     <div className="flex items-start">
                       <div className="flex-shrink-0 bg-[#ebebd3] rounded-lg p-3">
-                        <FiPhone className="h-6 w-6 text-[#fe49af]" />
+                        <IconWrapper Comp={FiPhone} color="#fe49af" size={20} />
                       </div>
                       <div className="ml-4">
                         <h3 className="text-lg font-medium text-[#67246a]">Phone</h3>
@@ -271,7 +287,7 @@ const Contact: React.FC = () => {
 
                     <div className="flex items-start">
                       <div className="flex-shrink-0 bg-[#ebebd3] rounded-lg p-3">
-                        <FiMapPin className="h-6 w-6 text-[#67246a]" />
+                        <IconWrapper Comp={FiMapPin} color="#67246a" size={20} />
                       </div>
                       <div className="ml-4">
                         <h3 className="text-lg font-medium text-[#67246a]">Address</h3>
@@ -302,7 +318,7 @@ const Contact: React.FC = () => {
                           <h3 className="text-lg font-medium text-[#67246a] hover:text-[#fe49af] transition">
                             {faq.question}
                           </h3>
-                          <FiChevronDown className={`h-5 w-5 text-[#fe49af] transition-transform ${activeFaq === index ? 'transform rotate-180' : ''}`} />
+                          <IconWrapper Comp={FiChevronDown} color="#fe49af" size={18} className={`transition-transform ${activeFaq === index ? 'transform rotate-180' : ''}`} />
                         </button>
                         <AnimatePresence>
                           {activeFaq === index && (

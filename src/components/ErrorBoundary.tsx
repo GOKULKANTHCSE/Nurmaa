@@ -37,7 +37,8 @@ class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return this.props.children;
+  // cast to any to satisfy TypeScript in this environment
+  return (this as any).props.children;
   }
 }
 

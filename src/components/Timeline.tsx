@@ -63,11 +63,12 @@ const MarioTimeline: React.FC<MarioTimelineProps> = ({
   events = defaultEvents,
   theme = {}
 }) => {
+  const themeObj = (theme ?? {}) as NonNullable<MarioTimelineProps['theme']>;
   const {
     primaryColor = '#9251ac',
     secondaryColor = '#f6a4ec',
     textColor = '#525f7f'
-  } = theme;
+  } = themeObj;
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 

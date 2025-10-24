@@ -132,7 +132,7 @@ const Hero = () => {
 		visible: { 
 			opacity: 1, 
 			y: 0,
-			transition: { duration: 0.6, ease: "easeOut" }
+			transition: ({ duration: 0.6, ease: "easeOut" } as any)
 		}
 	};
 
@@ -152,7 +152,7 @@ const Hero = () => {
 					initial="enter"
 					animate="center"
 					exit="exit"
-					transition={{ type: "tween", ease: "easeInOut", duration: 0.8 }}
+					transition={({ type: "tween", ease: "easeInOut", duration: 0.8 } as any)}
 					className="absolute inset-0 z-0"
 				>
 					<img
@@ -283,24 +283,24 @@ const Hero = () => {
 			<div className="absolute bottom-4 right-4 z-20">
 				<motion.div
 					animate={{ 
-						y: [0, -10, 0],
-						transition: { 
-							duration: 2,
-							repeat: Infinity,
-							ease: "easeInOut"
-						}
-					}}
+					y: [0, -10, 0],
+					transition: ({ 
+						duration: 2,
+						repeat: Infinity,
+						ease: "easeInOut"
+					} as any)
+				}}
 					className="text-[#EBEBD3] text-sm font-medium flex items-center gap-1"
 				>
 					<span>Scroll Down</span>
 					<motion.div
 						animate={{ 
 							y: [0, 5, 0],
-							transition: { 
+							transition: ({ 
 								duration: 1.5,
 								repeat: Infinity,
 								ease: "easeInOut"
-							}
+							} as any)
 						}}
 					>
 						<ChevronRight className="rotate-90" />

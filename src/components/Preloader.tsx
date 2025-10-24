@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 
 const MAX_WAIT_MS = 8000;
@@ -10,56 +11,103 @@ interface PreloaderProps {
 const Preloader: React.FC<PreloaderProps> = ({ minMs = 700 }) => {
   const [visible, setVisible] = useState(true);
   const [progress, setProgress] = useState(0);
+  const location = useLocation();
+  const runningRef = useRef(false);
 
   useEffect(() => {
-    let finished = false;
-    let progressInterval: NodeJS.Timeout;
+    // Run on mount and on every route change (location)
+    let progressInterval: ReturnType<typeof setInterval> | null = null;
+    let safetyTimeout: ReturnType<typeof setTimeout> | null = null;
+    let mounted = true;
 
-    const onLoad = () => {
-      finished = true;
+    const startAndWait = async () => {
+      if (runningRef.current) return;
+      runningRef.current = true;
+      setVisible(true);
+      setProgress(5);
+
+      const startTime = Date.now();
+
+      // progress updater until resources settle
+      progressInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const newProgress = Math.min((elapsed / MAX_WAIT_MS) * 100, 95);
+        setProgress(newProgress);
+      }, 100);
+
+      // Wait for window load OR document readyState complete
+      const waitForWindowLoad = () =>
+        new Promise<void>((resolve) => {
+          if (document.readyState === 'complete') return resolve();
+          window.addEventListener('load', () => resolve(), { once: true });
+        });
+
+      // Wait for images inside <main> to load
+      const waitForMainImages = () =>
+        new Promise<void>((resolve) => {
+          try {
+            const imgs = Array.from(document.querySelectorAll('main img')) as HTMLImageElement[];
+            if (imgs.length === 0) return resolve();
+            let remaining = imgs.length;
+            const check = () => {
+              remaining -= 1;
+              if (remaining <= 0) resolve();
+            };
+            imgs.forEach((img) => {
+              if (img.complete) {
+                check();
+              } else {
+                img.addEventListener('load', check, { once: true });
+                img.addEventListener('error', check, { once: true });
+              }
+            });
+          } catch (e) {
+            resolve();
+          }
+        });
+
+      // Safety timeout to avoid hanging forever
+      const safety = new Promise<void>((resolve) => {
+        safetyTimeout = setTimeout(() => resolve(), MAX_WAIT_MS);
+      });
+
+      // Wait for both window load and main images, bounded by safety timeout
+      await Promise.race([Promise.all([waitForWindowLoad(), waitForMainImages()]), safety]);
+
+      if (!mounted) return;
+
+      // Ensure minimum display time
+      const elapsedTotal = Date.now() - startTime;
+      const remainingMin = Math.max(0, minMs - elapsedTotal);
+
       setProgress(100);
-      setTimeout(() => setVisible(false), 300);
+      setTimeout(() => {
+        if (!mounted) return;
+        setVisible(false);
+        runningRef.current = false;
+      }, remainingMin + 250); // small fade allowance
+
+      // cleanup interval
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+      }
+      if (safetyTimeout) {
+        clearTimeout(safetyTimeout);
+        safetyTimeout = null;
+      }
     };
 
-    const startTime = Date.now();
-    progressInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const newProgress = Math.min((elapsed / MAX_WAIT_MS) * 100, 95);
-      setProgress(newProgress);
-    }, 50);
-
-    const minTimer = setTimeout(() => {
-      if (!finished) {
-        window.addEventListener('load', onLoad, { once: true });
-      } else {
-        setVisible(false);
-      }
-    }, minMs);
-
-    const safetyTimeout = setTimeout(() => {
-      if (!finished) {
-        finished = true;
-        setProgress(100);
-        setVisible(false);
-      }
-    }, MAX_WAIT_MS);
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      if (!finished) {
-        finished = true;
-        clearTimeout(minTimer);
-        setProgress(100);
-        setTimeout(() => setVisible(false), 300);
-      }
-    }
+    startAndWait();
 
     return () => {
-      clearTimeout(minTimer);
-      clearTimeout(safetyTimeout);
-      clearInterval(progressInterval);
-      window.removeEventListener('load', onLoad);
+      mounted = false;
+      if (progressInterval) clearInterval(progressInterval);
+      if (safetyTimeout) clearTimeout(safetyTimeout);
+      runningRef.current = false;
     };
-  }, [minMs]);
+    // run again when location changes
+  }, [minMs, location]);
 
   if (!visible) return null;
 

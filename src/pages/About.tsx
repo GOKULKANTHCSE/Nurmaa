@@ -27,7 +27,7 @@ const fadeInUp = {
   visible: (i = 1) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.15, duration: 0.7, type: 'spring' }
+    transition: ({ delay: i * 0.15, duration: 0.7, type: 'spring' } as any)
   })
 };
 
@@ -236,17 +236,17 @@ const About: React.FC = () => {
                 description: 'The ankh symbolizes life; we honor vitality and holistic wellness in all we do.'
               }
             ].map((value, idx) => (
-              <motion.div
+                <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 60, scale: 0.85, rotate: -8 + idx * 8 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{
+                transition={({
                   delay: 0.2 + idx * 0.18,
                   duration: 0.8,
                   type: 'spring',
                   bounce: 0.35
-                }}
+                } as any)}
               >
                 <NurmaaCard className="flex flex-col items-center py-8 md:py-10 group relative overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-500">
                   {/* Animated glowing background blob */}
@@ -262,14 +262,14 @@ const About: React.FC = () => {
                     <motion.span
                       initial={{ scale: 0.8, filter: 'blur(2px)' }}
                       whileInView={{ scale: 1.1, filter: 'blur(0px)' }}
-                      transition={{
-                        repeat: Infinity,
-                        repeatType: 'reverse',
-                        duration: 2.2 + idx * 0.3,
-                        ease: 'easeInOut',
-                        delay: 0.5 + idx * 0.2
-                      }}
-                      className="inline-block"
+                      transition={({
+                          repeat: Infinity,
+                          repeatType: 'reverse',
+                          duration: 2.2 + idx * 0.3,
+                          ease: 'easeInOut',
+                          delay: 0.5 + idx * 0.2
+                        } as any)}
+                        className="inline-block"
                     >
                       <span className="text-5xl drop-shadow-lg">{value.icon}</span>
                     </motion.span>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
+// removed next/head import (not a Next.js app)
 import { motion, AnimatePresence } from 'framer-motion';
-import client from '../../assets/images/client.png';
+import client from '@/assets/images/client.png';
 
 const Testimonials: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -101,10 +101,21 @@ const Testimonials: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Testimonials | Our Happy Clients</title>
-        <meta name="description" content="Hear what our clients and partners say about working with us" />
-      </Helmet>
+      {/* Set document title/meta for SPA (not using next/head) */}
+      {typeof document !== 'undefined' && (() => {
+        try {
+          document.title = 'Testimonials | Our Happy Clients';
+          let m = document.querySelector('meta[name="description"]');
+          if (!m) {
+            m = document.createElement('meta');
+            m.setAttribute('name', 'description');
+            document.head.appendChild(m);
+          }
+          m.setAttribute('content', 'Hear what our clients and partners say about working with us');
+        } catch (e) {
+          // ignore in non-browser environments
+        }
+      })()}
 
       <div className="min-h-screen bg-gradient-to-b from-[#EBEBD3] to-white">
         {/* Enhanced Hero Section */}

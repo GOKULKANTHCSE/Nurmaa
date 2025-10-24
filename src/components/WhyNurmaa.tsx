@@ -3,25 +3,25 @@ import { GiPlantSeed, GiFarmTractor, GiLipstick, GiTreeGrowth } from 'react-icon
 const WhyChooseUs = () => {
   const features = [
     {
-      icon: <GiPlantSeed className="w-8 h-8" color="#EBEBD3" />, // Skincare
+      icon: GiPlantSeed, // Skincare
       title: "Homemade Skincare",
       description: "Crafted with natural ingredients for radiant skin",
       color: "linear-gradient(135deg, #121769 0%, #67246A 100%)" // Deep navy gradient
     },
     {
-      icon: <GiFarmTractor className="w-8 h-8" color="#EBEBD3" />, // Food
+      icon: GiFarmTractor, // Food
       title: "Organic Food",
       description: "Sourced from local farms for pure nourishment",
       color: "linear-gradient(135deg, #121769 0%, #67246A 100%)"  // Royal blue
     },
     {
-      icon: <GiLipstick className="w-8 h-8" color="#EBEBD3" />, // Makeup
+      icon: GiLipstick, // Makeup
       title: "Natural Makeup",
       description: "Enhance your beauty with eco-friendly cosmetics",
       color: "linear-gradient(135deg, #121769 0%, #67246A 100%)"  // Gold
     },
     {
-      icon: <GiTreeGrowth className="w-8 h-8" color="#EBEBD3" />, // Sustainability
+      icon: GiTreeGrowth, // Sustainability
       title: "Sustainable Legacy",
       description: "Committed to preserving nature and heritage",
       color:"linear-gradient(135deg, #121769 0%, #67246A 100%)" // Ochre
@@ -176,7 +176,14 @@ const WhyChooseUs = () => {
                     border: '2px solid rgba(212, 175, 55, 0.5)'
                   }}
                 >
-                  {feature.icon}
+                  {(() => {
+                    const Icon = feature.icon as any;
+                    return (
+                      <span style={{ color: '#EBEBD3', fontSize: 20, display: 'inline-flex' }}>
+                        <Icon />
+                      </span>
+                    );
+                  })()}
                 </div>
                 
                 <h3 

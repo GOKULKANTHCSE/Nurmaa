@@ -22,7 +22,10 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === 'development' &&
     componentTagger(),
-    mode === 'production' ? ViteImageOptimizer() : undefined,
+  // Only enable the image optimizer when explicitly requested via env var.
+  // This prevents requiring native deps like `sharp` during normal CI/CD builds
+  // (e.g., Vercel) unless you explicitly opt-in by setting ENABLE_IMAGE_OPTIMIZER=true.
+  (mode === 'production' && process.env.ENABLE_IMAGE_OPTIMIZER === 'true') ? ViteImageOptimizer() : undefined,
   ].filter(Boolean),
   resolve: {
     alias: {

@@ -5,7 +5,6 @@ import WhyNurmaa from '@/components/WhyNurmaa';
 import Testimonials from '@/components/Testimonials';
 import QuickPurchaseModal from '@/components/QuickPurchaseModal';
 import BrisbaneGinSlider from '../components/ProductKinds';
-import Chatbot from '@/components/Chatbot';
 
 import { Product } from '@/lib/types';
 
@@ -35,7 +34,6 @@ const Index: React.FC = () => {
         onClose={closeModal} 
         product={selectedProduct}
       />
-      <Chatbot />
     </>
   );
 };

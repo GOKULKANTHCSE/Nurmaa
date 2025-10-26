@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronLeft, ChevronRight, Heart, ShoppingBag } from "lucide-react";
-import Preloader from "./Preloader";
+import { useNavigate } from "react-router-dom";
 
 import logo from '@/assets/images/ban1.jpg';
 import bg2 from '@/assets/images/ban2.png';
@@ -14,7 +14,7 @@ const slides = [
 		id: 1,
 		title: "Nurtured by Nature",
 		description: "Discover ethically sourced, handcrafted products rooted in tradition and crafted with care.",
-		image: logo,
+		image: "https://i.pinimg.com/1200x/8c/27/0c/8c270cee9359a80f5568e943e6f47be2.jpg",
 		color: "#67246A",
 		buttonVariant: "default"
 	},
@@ -22,7 +22,7 @@ const slides = [
 		id: 2,
 		title: "Pure, Simple, Organic",
 		description: "We bring you nature's best—no chemicals, no compromises. Just purity in every drop.",
-		image: bg2,
+		image: "https://i.pinimg.com/736x/f1/0f/85/f10f857f68a5771a4a9b98b940cd0795.jpg",
 		color: "#121769",
 		buttonVariant: "secondary"
 	},
@@ -41,6 +41,7 @@ const Hero = () => {
 	const [direction, setDirection] = useState(1);
 	const [isHovering, setIsHovering] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const navigate = useNavigate();
 	const slideInterval = useRef(null);
 	const touchStartX = useRef(null);
 
@@ -70,9 +71,8 @@ const Hero = () => {
 		if (slideInterval.current) clearInterval(slideInterval.current);
 	};
 
-	const scrollToSection = () => {
-		const section = document.getElementById("scroll-target");
-		if (section) section.scrollIntoView({ behavior: "smooth" });
+	const handleShopNow = () => {
+		navigate("/products");
 	};
 
 	const handleTouchStart = (e) => {
@@ -255,7 +255,7 @@ const Hero = () => {
 								<Button
 									variant={slides[currentSlide].buttonVariant as "default" | "secondary" | "destructive" | "link" | "outline" | "ghost"}
 									className="px-8 py-6 rounded-full shadow-lg font-semibold text-lg flex items-center gap-2"
-									onClick={scrollToSection}
+									onClick={handleShopNow}
 								>
 									<ShoppingBag className="h-5 w-5" />
 									Shop Now

@@ -268,8 +268,8 @@ const allProducts: Product[] = [
   },
    { id: '11',
     name: 'Rose Herbal Tea',
-    category: 'skincare' as ProductCategory,
-    description: 'Kollu idly ready mix is stone-ground in small batches, free from preservatives, and perfect for soft, fluffy idlies that are light on the stomach and rich in nutrients. Just mix, ferment, and steam',
+    category: 'food' as ProductCategory,
+    description: 'Sip serenity with our Rose Herbal Tea, a delicate fusion of dried rose petals, hibiscus, cloves, cinnamon, and cardamom—all known for their calming, antioxidant-rich properties. This naturally caffeine-free blend is perfect for reducing stress, supporting digestion, and promoting radiant skin from within.Crafted in small batches with no preservatives or additives, this herbal tea is a gentle, aromatic companion to your wellness rituals—morning or night.',
     price: 150, // Direct INR price
     
   image: '/src/assets/images/Nurmaa product image/Rose Herbal Tea.webp',
@@ -281,8 +281,8 @@ const allProducts: Product[] = [
   },
    { id: '12',
     name: 'Panakatti Kappai',
-    category: 'skincare' as ProductCategory,
-    description: 'Perfect for all age groups, this herbal preparation can be crushed and added to warm water, tea, or simply chewed in small amounts for instant relief and warmth.',
+    category: 'food' as ProductCategory,
+    description: 'Rooted in age-old Ayurvedic wisdom, Panakatti Kappai is a powerful home remedy made with just three potent ingredients: Panakatti (Palm Jaggery), Dry Ginger, and Cardamom. This traditional blend is known for its effectiveness in relieving cold, sore throat, and indigestion naturally—without chemicals or side effects.Perfect for all age groups, this herbal preparation can be crushed and added to warm water, tea, or simply chewed in small amounts for instant relief and warmth.',
     price: 140, // Direct INR price
   image: '/src/assets/images/Nurmaa product image/Panakatti Kappai.webp',
     rating: 4.8,

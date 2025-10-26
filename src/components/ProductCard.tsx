@@ -116,7 +116,7 @@ const ProductCard: React.FC<{ product: Product; onQuickPurchase?: (product: Prod
               }}
               whileTap={{ scale: 0.98 }}
             >
-              Buy Now
+              Quick View
               <ArrowRight className="h-4 w-4" />
             </motion.button>
           </div>

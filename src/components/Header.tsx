@@ -17,16 +17,12 @@ const Header: React.FC = () => {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-    // If the user clicks a nav link that points to the current pathname,
-    // prevent the default navigation which can cause an unwanted scroll-to-top.
+  const handleNavClick = (path: string) => {
     if (location.pathname === path) {
-      e.preventDefault();
-      // simply close the mobile menu if open
+      // If on the same page, just close the mobile menu
       setIsMobileMenuOpen(false);
-      return;
     }
-    // for different paths, close mobile menu and allow navigation to proceed
+    // For all clicks, close the mobile menu
     setIsMobileMenuOpen(false);
   };
 
@@ -55,24 +51,27 @@ const Header: React.FC = () => {
           />
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-10">
-          {navLinks.map(({ label, path }) => (
-            <Link
-              key={path}
-              to={path}
-              onClick={(e) => handleNavClick(e as any, path)}
-              className={`relative font-medium text-lg transition-colors duration-300 ${
-                location.pathname === path ? 'text-[#67246a] font-bold' : 'text-[#121769] hover:text-[#FE49AF]'
-              } group`}
-            >
-              {label}
-              <span 
-                className={`absolute left-0 -bottom-1 h-[2px] bg-[#FE49AF] transition-all duration-300 ${
-                  location.pathname === path ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}
-              ></span>
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center">
+          <ul className="flex items-center space-x-10">
+            {navLinks.map(({ label, path }) => (
+              <li key={path}>
+                <Link
+                  to={path}
+                  onClick={() => handleNavClick(path)}
+                  className={`relative font-medium text-lg transition-colors duration-300 ${
+                    location.pathname === path ? 'text-[#67246a] font-bold' : 'text-[#121769] hover:text-[#FE49AF]'
+                  } group`}
+                >
+                  {label}
+                  <span 
+                    className={`absolute left-0 -bottom-1 h-[2px] bg-[#FE49AF] transition-all duration-300 ${
+                      location.pathname === path ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
+                  ></span>
+                </Link>
+              </li>
+            ))}
+          </ul>
 
           <button
             onClick={toggleCart}
@@ -172,21 +171,24 @@ const Header: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-[#EBEBD3] shadow-lg animate-slide-down">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <nav className="flex flex-col space-y-5">
-              {navLinks.map(({ label, path }) => (
-                <Link
-                  key={path}
-                  to={path}
-                  onClick={(e) => handleNavClick(e as any, path)}
-                  className={`text-lg font-medium py-2 transition-colors ${
-                    location.pathname === path 
-                      ? 'text-[#67246a] font-bold border-l-4 border-[#FE49AF] pl-3' 
-                      : 'text-[#121769] hover:text-[#FE49AF] pl-4'
-                  }`}
-                >
-                  {label}
-                </Link>
-              ))}
+            <nav>
+              <ul className="flex flex-col space-y-5">
+                {navLinks.map(({ label, path }) => (
+                  <li key={path}>
+                    <Link
+                      to={path}
+                      onClick={() => handleNavClick(path)}
+                      className={`text-lg font-medium py-2 transition-colors ${
+                        location.pathname === path 
+                          ? 'text-[#67246a] font-bold border-l-4 border-[#FE49AF] pl-3' 
+                          : 'text-[#121769] hover:text-[#FE49AF] pl-4'
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </nav>
           </div>
         </div>

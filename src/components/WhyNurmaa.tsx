@@ -139,7 +139,8 @@ const WhyChooseUs = () => {
               fontWeight: 700
             }}
           >
-            <span className="block">Why Choose NUR-MAA</span>
+            Why Choose NUR-MAA
+            
           </h2>
           
           <p 

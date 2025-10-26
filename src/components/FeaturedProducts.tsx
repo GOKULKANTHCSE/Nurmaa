@@ -184,11 +184,11 @@ const FeaturedProducts: React.FC<{ onQuickPurchase?: (product: Product) => void 
         <div className="sm:hidden w-full flex flex-col items-center">
           <div
             className="w-full flex justify-center items-center relative"
-            style={{ minHeight: 320 }}
+            style={{ minHeight: 280 }}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <div className="w-full max-w-xs mx-auto">
+            <div className="w-full max-w-[280px] mx-auto">
               <Suspense fallback={<div className="bg-white rounded-xl p-4 animate-pulse h-64" />}>
                 <ProductCard 
                   product={featuredProducts[mobileIndex]} 

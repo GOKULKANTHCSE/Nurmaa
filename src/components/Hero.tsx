@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronLeft, ChevronRight, Heart, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Preloader from "./Preloader";
 
 import logo from '@/assets/images/ban1.jpg';
 import bg2 from '@/assets/images/ban2.png';
@@ -14,7 +15,7 @@ const slides = [
 		id: 1,
 		title: "Nurtured by Nature",
 		description: "Discover ethically sourced, handcrafted products rooted in tradition and crafted with care.",
-		image: "https://i.pinimg.com/1200x/8c/27/0c/8c270cee9359a80f5568e943e6f47be2.jpg",
+		image: logo,
 		color: "#67246A",
 		buttonVariant: "default"
 	},
@@ -22,7 +23,7 @@ const slides = [
 		id: 2,
 		title: "Pure, Simple, Organic",
 		description: "We bring you nature's best—no chemicals, no compromises. Just purity in every drop.",
-		image: "https://i.pinimg.com/736x/f1/0f/85/f10f857f68a5771a4a9b98b940cd0795.jpg",
+		image: bg2,
 		color: "#121769",
 		buttonVariant: "secondary"
 	},

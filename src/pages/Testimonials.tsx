@@ -135,9 +135,8 @@ const Testimonials: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="text-2xl xs:text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight"
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#EBEBD3] to-white">
                 Voices of Trust
-              </span>
+             
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
